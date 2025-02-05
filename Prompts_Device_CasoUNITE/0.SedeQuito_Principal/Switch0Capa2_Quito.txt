@@ -121,4 +121,15 @@ spanning-tree portfast
 
 end
 
-######################################################################################################
+#############################################   Para SNMP [Router o Switch] (Read/Write)   ##############################################
+
+enable
+configure terminal
+
+snmp-server community prueba-ro ro
+snmp-server community prueba-rw rw
+logging on
+logging 192.168.50.13
+logging trap debugging
+
+end
