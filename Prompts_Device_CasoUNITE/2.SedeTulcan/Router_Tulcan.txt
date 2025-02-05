@@ -1,0 +1,99 @@
+enable
+configure terminal
+ip dhcp pool VOIP
+network 192.168.1.0 255.255.255.0
+default-router 192.168.1.1
+option 150 ip 192.168.1.1 
+interface F0/0 
+ip address 192.168.1.1 255.255.255.0 
+no shutdown
+end
+
+enable
+configure terminal
+telephony-service
+max-ephones 2
+max-dn 2
+ip source-address 192.168.1.1 port 2000
+auto assign 1 to 2
+end
+
+enable
+configure terminal
+ephone-dn 1
+number 0201
+end
+
+enable
+configure terminal
+ephone-dn 2
+number 0202
+end
+
+
+
+
+
+######################################## Asignacion Direccion Routers #################################################
+
+enable
+configure terminal
+
+hostname RTulcan
+
+interface S0/0/1
+ip add 2.2.2.2 255.255.255.252
+ipv6 add 2800:2:2:2::2/64
+no shutdown
+
+interface S0/3/0
+ip add 5.5.5.2 255.255.255.252
+ipv6 add 2800:5:5:5::2/64
+no shutdown 
+
+end
+
+######################################## Asignacion Direccion Host #################################################
+
+enable
+configure terminal
+
+interface F0/0
+ip add 200.2.2.1 255.255.255.0
+ipv6 add 2800:A:C:2::1/64
+no shutdown
+
+end
+
+######################################## Configurar Protocolo OSPF #################################################
+
+enable
+configure terminal
+
+ip routing
+ipv6 unicast-routing
+
+route ospf 110
+router-id 2.2.2.2
+network 2.2.2.0     0.0.0.3     area 0
+network 5.5.5.0     0.0.0.3     area 0
+network 200.2.2.0   0.0.0.255   area 0
+passive-interface F0/0
+
+ipv6 router ospf 120
+router-id 2.2.2.2
+
+
+interface F0/0
+ipv6 ospf 120 area 0
+no shutdown
+
+interface S0/0/1
+ipv6 ospf 120 area 0
+no shutdown
+
+interface S0/3/0
+ipv6 ospf 120 area 0
+no shutdown
+
+end
