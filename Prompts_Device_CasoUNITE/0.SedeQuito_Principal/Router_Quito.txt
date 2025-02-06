@@ -68,3 +68,103 @@ logging 192.168.50.13
 logging trap debugging
 
 end
+
+######################################## Asignacion Direccion Routers #################################################
+
+enable
+configure terminal
+
+hostname RQuito
+
+interface S0/0/0
+ip add 1.1.1.1 255.255.255.252
+ipv6 add 2800:1:1:1::1/64
+no shutdown 
+
+interface S0/0/1
+ip add 2.2.2.1 255.255.255.252
+ipv6 add 2800:2:2:2::1/64
+no shutdown
+
+interface S0/1/0
+ip add 3.3.3.1 255.255.255.252
+ipv6 add 2800:3:3:3::1/64
+no shutdown
+
+interface S0/1/1
+ip add 4.4.4.1 255.255.255.252
+ipv6 add 2800:4:4:4::1/64
+no shutdown
+
+end
+
+######################################## Asignacion Direccion Host #################################################
+
+Por Hacer
+
+######################################## Configurar Protocolo OSPF #################################################
+
+enable
+configure terminal
+
+ip routing
+ipv6 unicast-routing
+
+route ospf 110
+router-id 8.8.8.8
+network 1.1.1.0         0.0.0.3     area 0
+network 2.2.2.0         0.0.0.3     area 0
+
+ipv6 router ospf 120
+router-id 8.8.8.8
+
+interface S0/0/0
+ipv6 ospf 120 area 0
+no shutdown
+
+interface S0/0/1
+ipv6 ospf 120 area 0
+no shutdown
+
+end
+
+######################################## Configurar Protocolo EIGRP #################################################
+
+enable
+configure terminal
+
+ip routing
+ipv6 unicast-routing
+
+router eigrp 210
+eigrp router-id 8.8.8.8
+network 3.3.3.0         0.0.0.3
+network 4.4.4.0         0.0.0.3
+
+ipv6 router eigrp 220
+eigrp router-id 8.8.8.8
+no shutdown
+
+interface S0/1/0
+ipv6 eigrp 220
+no shutdown
+
+interface S0/1/1
+ipv6 eigrp 220
+no shutdown
+
+end
+
+######################################## Configurar Redistribucion #################################################
+
+
+enable
+configure terminal
+
+router ospf 110
+redistribute eigrp 210 metric 64 subnets
+
+router eigrp 210
+redistribute ospf 110 metric 3000000 20210 255 125 1500
+
+end
