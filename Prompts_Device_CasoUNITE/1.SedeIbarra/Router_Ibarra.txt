@@ -54,7 +54,7 @@ end
 enable
 configure terminal
 
-interface F0/0
+interface F1/0
 ip add 200.2.1.1 255.255.255.0
 ipv6 add 2800:A:C:1::1/64
 no shutdown
@@ -74,13 +74,13 @@ router-id 1.1.1.1
 network 1.1.1.0     0.0.0.3     area 0
 network 5.5.5.0     0.0.0.3     area 0
 network 200.2.1.0   0.0.0.255   area 0
-passive-interface F0/0
+passive-interface F1/0
 
 ipv6 router ospf 120
 router-id 1.1.1.1
 
 
-interface F0/0
+interface F1/0
 ipv6 ospf 120 area 0
 no shutdown
 
