@@ -46,6 +46,10 @@ dial-peer voice 103 voip
 destination-pattern 03..
 session target ipv4:192.168.4.1
 
+dial-peer voice 104 voip
+destination-pattern 04..
+session target ipv4:192.168.5.1
+
 end
 
 #############################################   Para  NTP   ##############################################
