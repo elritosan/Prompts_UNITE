@@ -1,33 +1,40 @@
 enable
 configure terminal
+
 ip dhcp pool VOIP
-network 192.168.1.0 255.255.255.0
-default-router 192.168.1.1
-option 150 ip 192.168.1.1 
-interface F0/0 
-ip address 192.168.1.1 255.255.255.0 
+network 192.168.2.0 255.255.255.0
+default-router 192.168.2.1
+option 150 ip 192.168.2.1
+
+interface F0/0
+ip address 192.168.2.1 255.255.255.0
 no shutdown
-end
 
-enable
-configure terminal
 telephony-service
-max-ephones 2
-max-dn 2
-ip source-address 192.168.1.1 port 2000
-auto assign 1 to 2
+max-ephones 10
+max-dn 10
+ip source-address 192.168.2.1 port 2000
+auto assign 1 to 10
+
 end
 
 enable
 configure terminal
+
 ephone-dn 1
 number 0101
+ephone-dn 2
+number 0102
+
 end
 
 enable
 configure terminal
-ephone-dn 2
-number 0102
+
+dial-peer voice 100 voip
+destination-pattern 00..
+session target ipv4:192.168.1.1
+
 end
 
 ######################################## Asignacion Direccion Routers #################################################

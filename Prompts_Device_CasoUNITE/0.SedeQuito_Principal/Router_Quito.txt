@@ -2,6 +2,7 @@
 
 enable
 configure terminal
+
 ip dhcp pool VOIP
 network 192.168.1.0 255.255.255.0
 default-router 192.168.1.1
@@ -12,25 +13,31 @@ ip address 192.168.1.1 255.255.255.0
 no shutdown
 end
 
-enable
-configure terminal
 telephony-service
-max-ephones 2
-max-dn 2
+max-ephones 20
+max-dn 20
 ip source-address 192.168.1.1 port 2000
-auto assign 1 to 2
+auto assign 1 to 20
+
 end
 
 enable
 configure terminal
+
 ephone-dn 1
 number 0001
+ephone-dn 2
+number 0002
+
 end
 
 enable
 configure terminal
-ephone-dn 2
-number 0002
+
+dial-peer voice 101 voip
+destination-pattern 01..
+session target ipv4:192.168.2.1
+
 end
 
 #############################################   Para  NTP   ##############################################
@@ -124,7 +131,7 @@ network 1.1.1.0         0.0.0.3     area 0
 network 2.2.2.0         0.0.0.3     area 0
 
 network 200.2.8.0       0.0.0.255   area 0
-passive-interface F1/0
+network 192.168.0.0     0.0.255.255   area 0
 
 ipv6 router ospf 120
 router-id 8.8.8.8
@@ -181,5 +188,23 @@ redistribute eigrp 210 metric 64 subnets
 
 router eigrp 210
 redistribute ospf 110 metric 3000000 20210 255 125 1500
+
+end
+
+enable
+configure terminal
+
+ip route 192.168.10.0 255.255.255.0 200.2.8.2
+ip route 192.168.20.0 255.255.255.0 200.2.8.2
+
+end
+
+enable
+configure terminal
+
+interface F0/0
+ip ospf cost 100
+interface F0/1
+ip ospf cost 100
 
 end
